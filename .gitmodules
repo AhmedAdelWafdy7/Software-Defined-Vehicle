@@ -4,3 +4,6 @@
 [submodule "Secure-OTA-Application"]
 	path = Secure-OTA-Application
 	url = https://github.com/AhmedAdelWafdy7/Secure-OTA-Application.git
+[submodule "meta-sdv"]
+	path = meta-sdv
+	url = git@github.com:AhmedAdelWafdy7/meta-adas.git
