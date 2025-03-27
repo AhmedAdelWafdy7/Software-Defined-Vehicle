@@ -33,6 +33,22 @@ The Control component manages the physical vehicle operations:
   | orientation | GPS | 0x04 |
   | headunit start | Autonomous driving | 0x05 |
 
+### ECU-Core (will be added in the future)
+The Core component serves as the central processing and decision-making unit:
+
+- **Hardware**: Raspberry Pi with 2-CH CAN FD HAT, YDLIDAR X4, RealSense D435 depth camera
+- **Features**:
+  - Publishes LIDAR scan data as ROS2 topics
+  - Publishes depth camera image data as ROS2 topics
+  - Converts ROS2 topics to CAN messages for vehicle control
+  - Controls autonomous driving mode execution
+  - Coordinates between sensor inputs and vehicle controls
+- **Dependencies**:
+  - ROS2 Foxy
+  - YDLidar-SDK
+  - RealSense SDK
+  - OpenCV and Python packages (numpy, transforms3d)
+
 ### Secure OTA System
 The Over-The-Air update system ensures secure software updates:
 
@@ -109,45 +125,88 @@ The system runs on a customized Linux distribution built with Yocto:
 ## System Architecture
 
 ### UML Architecture Diagram
-To visualize the system architecture, create a UML diagram with the following components and relationships:
 
-Components:
-1. **ECU-Head** (HeadUnit): 
-   - Interfaces with user
-   - Displays vehicle information
-   - Provides infotainment
+```mermaid
+classDiagram
+class ECU_Head {
++Qt5/QML UI
++Infotainment System
++Web Interface
+-DisplayVehicleStatus()
+-ProcessUserInput()
+-PlayMultimedia()
+}
+class ECU_Core {
++Sensor Processing
++Decision Making
++Component Coordination
+-ProcessSensorData()
+-MakeDrivingDecisions()
+-CoordinateComponents()
+}
+class ECU_Control {
++PiRacer Control
++Throttle Management
++Steering System
+-ControlThrottle()
+-ControlSteering()
+-ProcessGPS()
+}
+class OTA_System {
++Server Component
++Client Components
++Update Management
+-VerifySignatures()
+-DeployUpdates()
+-NotifyComponents()
+}
+class CommunicationBus {
++CAN Network
++Protocol Management
+-RouteMessages()
+-ValidateMessages()
+}
+ECU_Head <--> ECU_Core : Status & Commands
+ECU_Core --> ECU_Control : Driving Commands
+ECU_Control --> ECU_Core : Status & Sensor Data
+OTA_System --> ECU_Head : Update Delivery
+OTA_System --> ECU_Core : Update Delivery
+OTA_System --> ECU_Control : Update Delivery
+ECU_Head --> CommunicationBus : Message Exchange
+ECU_Core --> CommunicationBus : Message Exchange
+ECU_Control --> CommunicationBus : Message Exchange
+note for ECU_Head "Manages user interface\nand dashboard display"
+note for ECU_Control "Controls physical\nvehicle operations"
+note for ECU_Core "Central decision making\nand coordination unit"
+note for OTA_System "Secure update system\nwith cryptographic verification"
+note for CommunicationBus "CAN bus with defined\narbitration IDs for messages"
+```
+### Data Flow Visualization
 
-2. **ECU-Control**:
-   - Controls physical vehicle hardware
-   - Processes driving commands
-   - Interfaces with PiRacer hardware
+```mermaid
+sequenceDiagram
+participant User
+participant ECU_Head
+participant ECU_Core
+participant ECU_Control
+participant Vehicle
+participant OTA_Server
+%% User input flow
+User->>ECU_Head: Input Commands
+ECU_Head->>ECU_Core: Forward Commands
+ECU_Core->>ECU_Control: Send Driving Instructions
+ECU_Control->>Vehicle: Control Movement
+%% Sensor data flow
+Vehicle->>ECU_Control: Provide Sensor Data
+ECU_Control->>ECU_Core: Forward Status Updates
+ECU_Core->>ECU_Head: Send Display Information
+ECU_Head->>User: Show Vehicle Status
+%% OTA update flow
+OTA_Server->>ECU_Head: Send Software Update
+OTA_Server->>ECU_Core: Send Software Update
+OTA_Server->>ECU_Control: Send Software Update
 
-3. **ECU-Core** (Central Processing):
-   - Processes sensor data
-   - Makes driving decisions
-   - Coordinates between components
-
-4. **OTA System**:
-   - Server component
-   - Client components on each ECU
-   - Update management
-
-5. **Communication Bus**:
-   - CAN network connecting all ECUs
-   - Message protocol system
-
-Relationships:
-- ECU-Head ↔ ECU-Core: Bidirectional data exchange (status, commands)
-- ECU-Core → ECU-Control: Driving commands
-- ECU-Control → ECU-Core: Status updates, sensor data
-- OTA System → All ECUs: Update delivery
-- All ECUs → Communication Bus: Message exchange
-
-Data Flow:
-- User Input → ECU-Head → ECU-Core → ECU-Control → Vehicle Movement
-- Sensor Data → ECU-Control → ECU-Core → ECU-Head → User Display
-- OTA Server → ECUs → Software Updates
-
+```
 ## Deployment Architecture
 
 The SDV architecture follows these principles:
