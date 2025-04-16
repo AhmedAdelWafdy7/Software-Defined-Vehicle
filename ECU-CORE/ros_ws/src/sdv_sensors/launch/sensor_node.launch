@@ -1,0 +1,9 @@
+<launch>
+  <!-- Camera parameters -->
+  <arg name="camera_id" default="0"/>
+  
+  <!-- Launch the camera node -->
+  <node name="camera_node" pkg="sdv_sensors" type="camera_node.py" output="screen">
+    <param name="camera_id" value="$(arg camera_id)"/>
+  </node>
+</launch> 

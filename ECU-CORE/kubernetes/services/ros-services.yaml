@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ros-master-service
+spec:
+  selector:
+    app: ros-master
+  ports:
+  - port: 11311
+    targetPort: 11311
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sensor-node-service
+spec:
+  selector:
+    app: sensor-node
+  ports:
+  - port: 9090
+    targetPort: 9090
+  type: ClusterIP 

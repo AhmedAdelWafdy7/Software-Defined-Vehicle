@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ros-master
+  labels:
+    app: ros-master
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ros-master
+  template:
+    metadata:
+      labels:
+        app: ros-master
+    spec:
+      containers:
+      - name: ros-master
+        image: ros-master:latest
+        ports:
+        - containerPort: 11311
+        env:
+        - name: ROS_HOSTNAME
+          value: "ros-master"
+        - name: ROS_MASTER_URI
+          value: "http://ros-master:11311" 
