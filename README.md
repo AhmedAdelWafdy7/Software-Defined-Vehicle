@@ -247,3 +247,6 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - OpenSSL
 - Raspberry Pi Foundation
 - PiRacer
+
+To do :
+ECU-Core : contains ADAS feature
