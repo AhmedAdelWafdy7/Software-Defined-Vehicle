@@ -128,84 +128,83 @@ The system runs on a customized Linux distribution built with Yocto:
 
 ```mermaid
 classDiagram
-class ECU_Head {
-+Qt5/QML UI
-+Infotainment System
-+Web Interface
--DisplayVehicleStatus()
--ProcessUserInput()
--PlayMultimedia()
-}
-class ECU_Core {
-+Sensor Processing
-+Decision Making
-+Component Coordination
--ProcessSensorData()
--MakeDrivingDecisions()
--CoordinateComponents()
-}
-class ECU_Control {
-+PiRacer Control
-+Throttle Management
-+Steering System
--ControlThrottle()
--ControlSteering()
--ProcessGPS()
-}
-class OTA_System {
-+Server Component
-+Client Components
-+Update Management
--VerifySignatures()
--DeployUpdates()
--NotifyComponents()
-}
-class CommunicationBus {
-+CAN Network
-+Protocol Management
--RouteMessages()
--ValidateMessages()
-}
-ECU_Head <--> ECU_Core : Status & Commands
-ECU_Core --> ECU_Control : Driving Commands
-ECU_Control --> ECU_Core : Status & Sensor Data
-OTA_System --> ECU_Head : Update Delivery
-OTA_System --> ECU_Core : Update Delivery
-OTA_System --> ECU_Control : Update Delivery
-ECU_Head --> CommunicationBus : Message Exchange
-ECU_Core --> CommunicationBus : Message Exchange
-ECU_Control --> CommunicationBus : Message Exchange
-note for ECU_Head "Manages user interface\nand dashboard display"
-note for ECU_Control "Controls physical\nvehicle operations"
-note for ECU_Core "Central decision making\nand coordination unit"
-note for OTA_System "Secure update system\nwith cryptographic verification"
-note for CommunicationBus "CAN bus with defined\narbitration IDs for messages"
+    class ECU_Head {
+        +Qt5/QML UI
+        +Infotainment System
+        +Web Interface
+        -DisplayVehicleStatus()
+        -ProcessUserInput()
+        -PlayMultimedia()
+    }
+    class ECU_Core {
+        +Sensor Processing
+        +Decision Making
+        +Component Coordination
+        -ProcessSensorData()
+        -MakeDrivingDecisions()
+        -CoordinateComponents()
+    }
+    class ECU_Control {
+        +PiRacer Control
+        +Throttle Management
+        +Steering System
+        -ControlThrottle()
+        -ControlSteering()
+        -ProcessGPS()
+    }
+    class OTA_System {
+        +Server Component
+        +Client Components
+        +Update Management
+        -VerifySignatures()
+        -DeployUpdates()
+        -NotifyComponents()
+    }
+    class CommunicationBus {
+        +CAN Network
+        +Protocol Management
+        -RouteMessages()
+        -ValidateMessages()
+    }
+    ECU_Head <--> ECU_Core : Status and Commands
+    ECU_Core --> ECU_Control : Driving Commands
+    ECU_Control --> ECU_Core : Status and Sensor Data
+    OTA_System --> ECU_Head : Update Delivery
+    OTA_System --> ECU_Core : Update Delivery
+    OTA_System --> ECU_Control : Update Delivery
+    ECU_Head --> CommunicationBus : Message Exchange
+    ECU_Core --> CommunicationBus : Message Exchange
+    ECU_Control --> CommunicationBus : Message Exchange
+    note for ECU_Head "Manages user interface and dashboard display"
+    note for ECU_Control "Controls physical vehicle operations"
+    note for ECU_Core "Central decision making and coordination unit"
+    note for OTA_System "Secure update system with cryptographic verification"
+    note for CommunicationBus "CAN bus with defined arbitration IDs for messages"
 ```
 ### Data Flow Visualization
 
 ```mermaid
 sequenceDiagram
-participant User
-participant ECU_Head
-participant ECU_Core
-participant ECU_Control
-participant Vehicle
-participant OTA_Server
-%% User input flow
-User->>ECU_Head: Input Commands
-ECU_Head->>ECU_Core: Forward Commands
-ECU_Core->>ECU_Control: Send Driving Instructions
-ECU_Control->>Vehicle: Control Movement
-%% Sensor data flow
-Vehicle->>ECU_Control: Provide Sensor Data
-ECU_Control->>ECU_Core: Forward Status Updates
-ECU_Core->>ECU_Head: Send Display Information
-ECU_Head->>User: Show Vehicle Status
-%% OTA update flow
-OTA_Server->>ECU_Head: Send Software Update
-OTA_Server->>ECU_Core: Send Software Update
-OTA_Server->>ECU_Control: Send Software Update
-
+    participant User
+    participant ECU_Head
+    participant ECU_Core
+    participant ECU_Control
+    participant Vehicle
+    participant OTA_Server
+    %% User input flow
+    User->>ECU_Head: Input Commands
+    ECU_Head->>ECU_Core: Forward Commands
+    ECU_Core->>ECU_Control: Send Driving Instructions
+    ECU_Control->>Vehicle: Control Movement
+    %% Sensor data flow
+    Vehicle->>ECU_Control: Provide Sensor Data
+    ECU_Control->>ECU_Core: Forward Status Updates
+    ECU_Core->>ECU_Head: Send Display Information
+    ECU_Head->>User: Show Vehicle Status
+    %% OTA update flow
+    OTA_Server->>ECU_Head: Send Software Update
+    OTA_Server->>ECU_Core: Send Software Update
+    OTA_Server->>ECU_Control: Send Software Update
 ```
 ## Deployment Architecture
 
@@ -248,5 +247,3 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - OpenSSL
 - Raspberry Pi Foundation
 - PiRacer
-
-For questions or support, please contact the project maintainers.
